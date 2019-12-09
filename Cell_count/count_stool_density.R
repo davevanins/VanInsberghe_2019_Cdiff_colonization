@@ -1,3 +1,5 @@
+#This script is functionally very similar to the count_spores.R, but with additional thresholding and filtering steps to increase accuracy of cell counts in fluorescent images from complex samples, like stool samples
+
 library(EBImage)
 
 countCells <- function(img_in){
