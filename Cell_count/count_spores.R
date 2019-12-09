@@ -1,27 +1,20 @@
 library(EBImage)
 
-countCells <- function(img1){
-  #resize image
-  img = resize(img1,(dim(img1)[1])/2)
-  #img = medianFilter(img,2)
-  
+countCells <- function(img_in){
   # blur the image
-  f = array(1, dim=c(5,5))
-  f = f/sum(f)
-  img_flo = filter2(img, f)
-  #display(img_flo, method = "raster")
+  brush = array(100, dim=c(3,3))
+  brush = brush/sum(brush)
+  img_flo = filter2(img_in, brush)
+  #display(1.0-img_flo, method = "raster")
   
   # apply a threshold
-  nmaskt = thresh(1.0-img_flo, w=10, h=10, offset=0.03)
+  nmaskt = thresh(1.0-img_flo, w=3, h=3, offset=0.025) #The offset value should be calibrated using images with known cell counts, and checked against known positives and negatives
   #display(nmaskt, method = "raster")#,all = TRUE)
-  
-  nmask = watershed( distmap(nmaskt), 2 )
-  #display(colorLabels(nmask), method = "raster",all = TRUE)
-  
-  nucNo <- bwlabel(nmaskt[,,1])
+    
+  nucNo <- bwlabel(nmaskt)
   fts = computeFeatures.shape(nucNo)
   sarea = fts[1:nrow(fts)]
-  cellNo = sum(sarea>(mean(sarea)-(sd(sarea)/2)))
-  cat(i,'=', cellNo,'\n')
+  cellNo = sum(sarea>16) #The area threshold should be calibrated using images with known cell counts, and checked against known positives and negatives
+  
   return(cellNo)
 }
