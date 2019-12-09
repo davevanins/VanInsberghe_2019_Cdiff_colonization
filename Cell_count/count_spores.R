@@ -1,3 +1,5 @@
+#This script is designed to count spores and cells from pure cultures imaged using phase contrast microscopy
+
 library(EBImage)
 
 countCells <- function(img_in){
